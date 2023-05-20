@@ -32,7 +32,7 @@
                     <p class="product-price">${{$product->price}}</p>
                 </div>
             </div>
-            <div class="btn-group-sm">
+            <div class="btn-group-sm mt-1">
                 @foreach($product->tags as $tag)
                     <a class="btn btn-outline-secondary btn-sm" href="/tag/{{$tag->id}}">{{ $tag->name }}</a>
                 @endforeach

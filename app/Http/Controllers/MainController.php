@@ -13,8 +13,8 @@ class MainController extends Controller
     public function home()
     {
         $tab = 'home';
-        $categories = Category::all();
-        return view('home', compact('categories', 'tab'));
+        $products = Product::orderBy('created_at', 'DESC')->paginate(4);
+        return view('home', compact('products', 'tab'));
     }
 
     public function productsByCategory(int $categoryId)
