@@ -2,7 +2,7 @@
 
 @section('content')
     <h1 class="text-center">Categories</h1>
-    <a href="/admin/categories/create" class="btn btn-primary">Add Category</a>
+    <a href="{{url('admin/categories/create')}}" class="btn btn-primary">Add Category</a>
     <table class="table">
         <thead>
         <tr>

@@ -1,5 +1,7 @@
-@extends('templates.mainTemplate')
+@extends('templates.categories')
 
 @section('content')
-<h1>Home Page</h1>
-@endsection+
+    <h1>Home</h1>
+
+
+@endsection

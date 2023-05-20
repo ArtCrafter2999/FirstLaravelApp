@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use Symfony\Component\Process\Process;
 
 class ProductController extends Controller
 {
@@ -14,8 +17,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
-        return view('admin.products.index', compact('products'));
+        $tab = "products";
+        $products = Product::with('category')->paginate(5);
+        return view('admin.products.index', compact('products', 'tab'));
     }
 
     /**
@@ -24,7 +28,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('admin.products.create');
+        $tab = "products";
+        $categories = Category::all()->pluck('name', 'id');
+        $tags = Tag::all()->pluck('name', 'id');
+        return view('admin.products.create', compact('categories', 'tab', 'tags'));
     }
 
     /**
@@ -36,14 +43,16 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:100|unique:products,name',
-            'description' => 'required'
+            'title' => 'required',
+            'price' => 'required',
         ]);
 
-        $product = new Product();
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->save();
+        $product = Product::create($request->all());
+        $product->tags()->sync($request->tags);
+//        if ($request->image) {
+//            $product->image = $request->image->store('uploads');
+//            $product->save();
+//        }
 
         return redirect('/admin/products');
     }
@@ -51,7 +60,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -66,25 +75,31 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('admin.products.edit', compact('product'));
+        $tab = "products";
+        $categories = Category::all()->pluck('name', 'id');
+        $tags = Tag::all()->pluck('name', 'id');
+        return view('admin.products.edit', compact('categories', 'product', 'tags', 'tab'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @param int $id
      */
     public function update(Request $request, Product $product)
     {
         $request->validate([
-            'name' => 'required|max:100|unique:products,name,'.$product->id,
+            'title' => 'required',
             'description' => 'required'
         ]);
 
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->save();
+        $product->update($request->all());
+        $product->tags()->sync($request->tags);
+//        if ($request->image) {
+//            $product->image = $request->image->store('uploads');
+//            $product->save();
+//        }
 
         return redirect('/admin/products');
     }
@@ -92,7 +107,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      */
     public function destroy(Product $product)
     {

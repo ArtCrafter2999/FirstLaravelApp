@@ -47,7 +47,7 @@
                 <td>{{$feedback->comment}}</td>
                 <td>{{$feedback->created_at}}</td>
                 <td class="row">
-                    @for($i = 0; $i < $feedback->rate; $i++)★@endfor
+                    {{str_repeat("★", $feedback->rate)}}
                 </td>
             </tr>
         @endforeach
