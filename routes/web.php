@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\MainController;
 use Illuminate\Support\Facades\Auth;
@@ -42,6 +43,9 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], funct
     Lfm::routes();
 });
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/cart/checkout', [MainController::class, 'checkout']);
+Route::post('/cart/add', [CartController::class, 'add']);
+Route::delete('/cart/remove/{id}', [CartController::class, 'remove']);
+Route::post('/cart/clear', [CartController::class, 'clear']);
 
 Auth::routes();

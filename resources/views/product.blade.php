@@ -38,6 +38,14 @@
                 @endforeach
             </div>
             {!! $product->description !!}
+            <form class="mt-4" name="addToCartForm" action="">
+                <label>
+                    Amount
+                    <input class="form-control" type="number" name="quantity" value="1" min="1">
+                </label>
+                <input type="hidden" name="id" value="{{$product->id}}">
+                <button class="btn btn-success">Add to cart</button>
+            </form>
             @auth
                 @if(Auth::user()->role === 'admin')
                     <div class="btn-group d-flex justify-content-end">
